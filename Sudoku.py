@@ -82,15 +82,16 @@ class Sudoku():
         return ''.join(str(c) for c in self.sudoku.reshape(-1))
 
 if __name__ == '__main__':
-    with open(".\\data\\sudoku.csv", "r") as fr, open(".\\data\\result.json", "a") as fw:
+    with open("./data/sudoku.csv", "r") as fr, open("./data/result.csv", "w") as fw:
         line_num = 0
-        out = []
         for line in fr:
             line_num += 1
             quizzes, solutions = line.split(",")
             if quizzes != "quizzes":
                 sudoku = Sudoku(quizzes)
-                result = sudoku.resolve()
-                sudoku.print()
-                out.append({line_num: {"quizzes": quizzes, "solutions": solutions.strip(), "result": result}})
-        json.dump(out, fw)
+                solutions = sudoku.resolve()
+                if "0" in solutions:
+                    sudoku.print()
+                fw.write("{},{}\n".format(quizzes,solutions))
+            else:
+                fw.write("{},{}\n".format("quizzes","solutions"))
